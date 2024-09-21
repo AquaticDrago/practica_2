@@ -71,7 +71,7 @@
             $("#frmUsuario").submit(function (event) {
                 event.preventDefault()
 
-                $.post("/usuarios/guardar", $(this).serialize(), function (respuesta) {
+                $.post("/usuario/guardar", $(this).serialize(), function (respuesta) {
                     console.log(respuesta)
                 })
             })
