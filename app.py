@@ -35,10 +35,10 @@ def alumnos():
 def alumnosGuardar():
     con.close()
   
-    matricula      = request.form["txtMatriculaFA"]
-    nombreapellido = request.form["txtNombreApellidoFA"]
+    Usuario      = request.form["txtUsuarioFA"]
+    Contrasena = request.form["txtContrasenaFA"]
 
-    return f"Matrícula: {matricula} Nombre y Apellido: {nombreapellido}"
+    return f"Usuario: {matricula} Contrasena: {nombreapellido}"
 
 @app.route("/registrar", methods=["GET"])
 def registrar():
