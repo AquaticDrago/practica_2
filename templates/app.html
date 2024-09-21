@@ -17,9 +17,8 @@
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th>Temperatura</th>
-                    <th>Humedad</th>
-                    <th>Fecha y Hora</th>
+                    <th>Usuario</th>
+                    <th>Contraseña</th>
                 </tr>
             </thead>
             <tbody id="tbodyLog"></tbody>
@@ -39,7 +38,6 @@
                     $("#tbodyLog").append(`<tr>
                         <td>${registro[1]}</td>
                         <td>${registro[2]}</td>
-                        <td>${registro[3]}</td>
                     </tr>`)
                 }
             })
