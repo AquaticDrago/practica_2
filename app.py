@@ -26,7 +26,7 @@ def index():
     return render_template("app.html")
 
 @app.route("/usuarios")
-def alumnos():
+def usuarios():
     con.close()
   
     return render_template("usuarios.html")
