@@ -25,13 +25,13 @@ def index():
   
     return render_template("app.html")
 
-@app.route("/alumnos")
+@app.route("/usuarios")
 def alumnos():
     con.close()
   
-    return render_template("alumnos.html")
+    return render_template("usuarios.html")
 
-@app.route("/alumnos/guardar", methods=["POST"])
+@app.route("/usuarios/guardar", methods=["POST"])
 def alumnosGuardar():
     con.close()
   
