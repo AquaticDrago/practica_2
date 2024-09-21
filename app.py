@@ -32,7 +32,7 @@ def alumnos():
     return render_template("usuarios.html")
 
 @app.route("/usuarios/guardar", methods=["POST"])
-def alumnosGuardar():
+def usuariosGuardar():
     con.close()
   
     Usuario      = request.form["txtUsuarioFA"]
