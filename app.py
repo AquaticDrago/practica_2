@@ -38,7 +38,7 @@ def usuariosGuardar():
     Usuario      = request.form["txtUsuarioFA"]
     Contrasena = request.form["txtContrasenaFA"]
 
-    return f"Usuario: {matricula} Contrasena: {nombreapellido}"
+    return f"Usuario: {Usuario} Contrasena: {Contrasena}"
 
 @app.route("/registrar", methods=["GET"])
 def registrar():
@@ -56,7 +56,7 @@ def registrar():
     cursor = con.cursor()
     
     sql = "INSERT INTO tst0_usuarios (Nombre_Usuario, Contrasena) VALUES (%s, %s)"
-    val = (args["nombre"], args["contrasena"], datetime.datetime.now(pytz.timezone("America/Matamoros")))
+    val = (args["usuario"], args["contrasena"], datetime.datetime.now(pytz.timezone("America/Matamoros")))
     cursor.execute(sql, val)
 
     con.commit()
