@@ -49,6 +49,23 @@ def usuarios_guardar():
         con.commit()
 
         # Enviar el evento a Pusher
+        pusher_client.trigger@app.route("/usuarios/guardar", methods=["POST"])
+def usuarios_guardar():
+    try:
+        # Obtener la conexión a la base de datos
+        con = get_db_connection()
+        cursor = con.cursor()
+        
+        # Obtener los datos del formulario
+        Usuario = request.form["txtUsuarioFA"]
+        Contrasena = request.form["txtContrasenaFA"]
+
+        # Insertar los datos en la base de datos
+        sql = "INSERT INTO tst0_usuarios (Nombre_Usuario, Contrasena) VALUES (%s, %s)"
+        cursor.execute(sql, (Usuario, Contrasena))
+        con.commit()
+
+        # Enviar el evento a Pusher
         pusher_client.trigger("registrosTiempoReal", "registroTiempoReal", {"usuario": Usuario})
         
         return f"Usuario {Usuario} guardado exitosamente", 200
@@ -57,6 +74,7 @@ def usuarios_guardar():
     finally:
         cursor.close()
         con.close()
+
 
 @app.route("/buscar")
 def buscar():
