@@ -47,7 +47,10 @@
         // Configurar Pusher para actualizar en tiempo real
         var pusher = new Pusher('e9dbf5518f64c87c2a78', { cluster: 'us2' });
         var channel = pusher.subscribe("registrosTiempoReal");
+
+        // Cuando llegue un nuevo evento desde Pusher, actualizar la tabla
         channel.bind("registroTiempoReal", function (mensaje) {
+            console.log("Nuevo registro recibido desde Pusher:", mensaje);
             buscar(); // Actualizar la tabla al recibir un nuevo registro
         });
     </script>
