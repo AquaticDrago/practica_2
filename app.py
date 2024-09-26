@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, jsonify
-import pusher
 import mysql.connector
-import datetime
+import pusher
 import pytz
-
-app = Flask(__name__)
+import datetime
 
 # Configuración de la base de datos
 def get_db_connection():
@@ -24,14 +22,19 @@ pusher_client = pusher.Pusher(
     ssl=True
 )
 
+app = Flask(__name__)
+
+# Ruta principal
 @app.route("/")
 def index():
     return render_template("app.html")
 
+# Página de usuarios
 @app.route("/usuarios")
 def usuarios():
     return render_template("usuarios.html")
 
+# Guardar nuevo usuario y enviar evento a Pusher
 @app.route("/usuarios/guardar", methods=["POST"])
 def usuarios_guardar():
     try:
@@ -48,26 +51,9 @@ def usuarios_guardar():
         cursor.execute(sql, (Usuario, Contrasena))
         con.commit()
 
-        # Enviar el evento a Pusher
-        pusher_client.trigger@app.route("/usuarios/guardar", methods=["POST"])
-def usuarios_guardar():
-    try:
-        # Obtener la conexión a la base de datos
-        con = get_db_connection()
-        cursor = con.cursor()
-        
-        # Obtener los datos del formulario
-        Usuario = request.form["txtUsuarioFA"]
-        Contrasena = request.form["txtContrasenaFA"]
-
-        # Insertar los datos en la base de datos
-        sql = "INSERT INTO tst0_usuarios (Nombre_Usuario, Contrasena) VALUES (%s, %s)"
-        cursor.execute(sql, (Usuario, Contrasena))
-        con.commit()
-
-        # Enviar el evento a Pusher
+        # Enviar el evento a Pusher para notificar a las otras ventanas
         pusher_client.trigger("registrosTiempoReal", "registroTiempoReal", {"usuario": Usuario})
-        
+
         return f"Usuario {Usuario} guardado exitosamente", 200
     except mysql.connector.Error as err:
         return f"Error al guardar: {err}", 500
@@ -75,20 +61,41 @@ def usuarios_guardar():
         cursor.close()
         con.close()
 
-
-@app.route("/buscar")
-def buscar():
+# Ruta para registrar con argumentos GET
+@app.route("/registrar", methods=["GET"])
+def registrar():
     try:
-        # Obtener la conexión a la base de datos
+        # Obtener los parámetros GET
+        args = request.args
         con = get_db_connection()
         cursor = con.cursor()
 
-        # Consultar todos los usuarios ordenados por el ID
+        # Insertar en la base de datos
+        sql = "INSERT INTO tst0_usuarios (Nombre_Usuario, Contrasena, Fecha_Registro) VALUES (%s, %s, %s)"
+        val = (args["usuario"], args["contrasena"], datetime.datetime.now(pytz.timezone("America/Matamoros")))
+        cursor.execute(sql, val)
+        con.commit()
+
+        # Enviar evento a Pusher
+        pusher_client.trigger("registrosTiempoReal", "registroTiempoReal", {"usuario": args["usuario"]})
+        return args
+    except mysql.connector.Error as err:
+        return f"Error al registrar: {err}", 500
+    finally:
+        cursor.close()
+        con.close()
+
+# Buscar los usuarios desde la base de datos
+@app.route("/buscar", methods=["GET"])
+def buscar():
+    try:
+        con = get_db_connection()
+        cursor = con.cursor()
         cursor.execute("SELECT * FROM tst0_usuarios ORDER BY Id_Usuario DESC")
         registros = cursor.fetchall()
-
-        # Convertir los registros a un formato JSON para enviarlos al frontend
-        return jsonify(registros)
+        
+        # Estructurar la respuesta como JSON
+        return jsonify(registros), 200
     except mysql.connector.Error as err:
         return f"Error al buscar: {err}", 500
     finally:
